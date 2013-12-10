@@ -9,7 +9,7 @@ import kuvaldis.makeup.rest.resource.UserResource
  * Date: 10.12.13
  * Time: 14:22
  */
-class WebModule extends JerseyServletModule {
+class RestModule extends JerseyServletModule {
     @Override
     protected void configureServlets() {
         bind(UserResource)
