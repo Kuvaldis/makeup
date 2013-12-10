@@ -1,1 +1,1 @@
-include 'rest-app'
+include 'rest-app', 'shared'
