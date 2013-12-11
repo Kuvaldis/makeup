@@ -34,6 +34,7 @@ class H2DataSourceProvider implements Provider<DataSource> {
             partitionCount = 3
             acquireIncrement = 5
             statementsCacheSize = 100
-        } as DataSource
+            return it
+        }
     }
 }
