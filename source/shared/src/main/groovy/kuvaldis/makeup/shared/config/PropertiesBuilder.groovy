@@ -13,9 +13,10 @@ class PropertiesBuilder {
     private List<String> configFilesList;
 
     public PropertiesHolder build() {
+        def env = System.getProperty("env")
         ConfigObject resultConfig
         configFilesList.each {
-            def config = new ConfigSlurper().parse(new File(it).toURI().toURL())
+            def config = new ConfigSlurper(env).parse(new File(it).toURI().toURL())
             if (!resultConfig) {
                 resultConfig = config
             } else {
