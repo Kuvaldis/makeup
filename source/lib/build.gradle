@@ -1,0 +1,5 @@
+dependencies {
+    compile group: 'com.h2database', name: 'h2', version: '1.3.174'
+    compile group: 'com.jolbox', name: 'bonecp', version: '0.8.0.RELEASE'
+    compile group: 'com.google.guava', name: 'guava', version: '15.0'
+}

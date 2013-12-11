@@ -5,6 +5,7 @@ project.ext {
 
 dependencies {
     compile project(':shared')
+    compile project(':lib')
 
     compile group: 'javax.servlet', name: 'javax.servlet-api', version: '3.1.0'
     compile group: 'org.glassfish.grizzly', name: 'grizzly-http-servlet', version: grizzlyVersion

@@ -12,7 +12,7 @@ import kuvaldis.makeup.shared.config.PropertiesHolder
  */
 class AppModule extends AbstractModule {
 
-    private PropertiesHolder propertiesHolder
+    def PropertiesHolder propertiesHolder
 
     @Override
     protected void configure() {

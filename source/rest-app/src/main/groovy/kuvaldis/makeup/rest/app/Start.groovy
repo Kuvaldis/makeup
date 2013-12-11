@@ -3,6 +3,7 @@ package kuvaldis.makeup.rest.app
 import com.google.inject.Guice
 import com.google.inject.Injector
 import groovy.util.logging.Slf4j
+import kuvaldis.makeup.lib.module.LibModule
 import kuvaldis.makeup.rest.module.AppModule
 import kuvaldis.makeup.rest.server.GrizzlyServer
 import kuvaldis.makeup.shared.config.PropertiesBuilder
@@ -20,7 +21,7 @@ class Start {
         log.info('Start rest application')
         Injector sharedInjector = Guice.createInjector(new SharedModule())
         def appModule = new AppModule(propertiesHolder: sharedInjector.getInstance(PropertiesBuilder).build())
-        Injector injector = sharedInjector.createChildInjector(appModule)
+        Injector injector = sharedInjector.createChildInjector(appModule, new LibModule())
         def server = injector.getInstance(GrizzlyServer)
         log.info('Start http server')
         server.start()

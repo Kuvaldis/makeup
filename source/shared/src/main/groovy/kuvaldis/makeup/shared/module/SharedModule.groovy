@@ -19,6 +19,7 @@ class SharedModule extends AbstractModule {
     public List<String> configFilesList() {
         [
                 'conf/server.groovy',
+                'conf/db.groovy',
                 'conf/profiles.groovy'
         ]
     }
