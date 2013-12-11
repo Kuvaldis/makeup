@@ -12,7 +12,7 @@ class PropertiesBuilder {
     @Inject
     private List<String> configFilesList;
 
-    public Properties build() {
+    public PropertiesHolder build() {
         ConfigObject resultConfig
         configFilesList.each {
             def config = new ConfigSlurper().parse(new File(it).toURI().toURL())
@@ -22,6 +22,6 @@ class PropertiesBuilder {
                 resultConfig.merge(config)
             }
         }
-        resultConfig.toProperties()
+        new PropertiesHolder(configObject: resultConfig)
     }
 }

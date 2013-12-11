@@ -3,6 +3,7 @@ package kuvaldis.makeup.rest.module
 import com.google.inject.AbstractModule
 import com.google.inject.name.Names
 import kuvaldis.makeup.rest.server.GrizzlyServer
+import kuvaldis.makeup.shared.config.PropertiesHolder
 
 /**
  * User: NFadin
@@ -11,15 +12,12 @@ import kuvaldis.makeup.rest.server.GrizzlyServer
  */
 class AppModule extends AbstractModule {
 
-    Properties properties
-
-    AppModule(Properties properties) {
-        this.properties = properties
-    }
+    private PropertiesHolder propertiesHolder
 
     @Override
     protected void configure() {
+        bind(PropertiesHolder).toInstance(propertiesHolder)
         bind(GrizzlyServer)
-        Names.bindProperties(binder(), properties)
+        Names.bindProperties(binder(), propertiesHolder.toProperties())
     }
 }

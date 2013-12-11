@@ -15,7 +15,8 @@ import kuvaldis.makeup.shared.module.SharedModule
 class Start {
     public static void main(String[] args) {
         Injector sharedInjector = Guice.createInjector(new SharedModule())
-        Injector injector = sharedInjector.createChildInjector(new AppModule(sharedInjector.getInstance(PropertiesBuilder).build()))
+        def appModule = new AppModule(propertiesHolder: sharedInjector.getInstance(PropertiesBuilder).build())
+        Injector injector = sharedInjector.createChildInjector(appModule)
         def server = injector.getInstance(GrizzlyServer)
         server.start()
         println "Press any key to stop the server..."
