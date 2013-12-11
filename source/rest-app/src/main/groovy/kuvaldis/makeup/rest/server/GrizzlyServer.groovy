@@ -32,4 +32,8 @@ class GrizzlyServer {
     def start() {
         server.start()
     }
+
+    def stop() {
+        server.shutdownNow()
+    }
 }
