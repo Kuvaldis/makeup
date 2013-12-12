@@ -1,19 +1,29 @@
 package kuvaldis.makeup.rest.server
+
+import com.google.inject.name.Named
+import org.h2.tools.Server
+
 /**
  * @author Kuvaldis
  * Create date: 12.12.13 1:24
  */
 class H2Server {
 
-    H2Server() {
-        // todo implement
+    def Server server
+
+    H2Server(@Named('db.managementPassword') String managementPassword) {
+        server = Server.createTcpServer(
+                [
+                        '-tcpPassword', managementPassword,
+                        '-tcpAllowOthers'
+                ] as String[])
     }
 
     def start() {
-        // todo implement
+        server.start()
     }
 
     def stop() {
-        // todo implement
+        server.stop()
     }
 }
