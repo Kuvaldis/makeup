@@ -1,5 +1,6 @@
 package kuvaldis.makeup.rest.server
 
+import com.google.inject.Inject
 import com.google.inject.name.Named
 import org.h2.tools.Server
 
@@ -11,6 +12,7 @@ class H2Server {
 
     def Server server
 
+    @Inject
     H2Server(@Named('db.managementPassword') String managementPassword) {
         server = Server.createTcpServer(
                 [
