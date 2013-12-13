@@ -7,6 +7,7 @@ import com.google.inject.multibindings.Multibinder
 import com.google.inject.spi.InjectionListener
 import com.google.inject.spi.TypeEncounter
 import com.google.inject.spi.TypeListener
+import kuvaldis.makeup.lib.annotation.MainDataSource
 import kuvaldis.makeup.lib.db.H2DataSourceProvider
 import kuvaldis.makeup.lib.job.DbMigrationJob
 import kuvaldis.makeup.lib.job.Job
@@ -23,7 +24,7 @@ class LibModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(DataSource).toProvider(H2DataSourceProvider).asEagerSingleton()
+        bind(DataSource).annotatedWith(MainDataSource).toProvider(H2DataSourceProvider).asEagerSingleton()
         Multibinder<Job> jobsBinder = Multibinder.newSetBinder(binder(), Job)
         jobsBinder.addBinding().to(DbMigrationJob)
         bindJobExecutor()
