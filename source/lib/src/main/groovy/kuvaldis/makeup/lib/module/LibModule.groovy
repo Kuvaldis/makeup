@@ -1,7 +1,16 @@
 package kuvaldis.makeup.lib.module
 
 import com.google.inject.AbstractModule
+import com.google.inject.TypeLiteral
+import com.google.inject.matcher.AbstractMatcher
+import com.google.inject.multibindings.Multibinder
+import com.google.inject.spi.InjectionListener
+import com.google.inject.spi.TypeEncounter
+import com.google.inject.spi.TypeListener
 import kuvaldis.makeup.lib.db.H2DataSourceProvider
+import kuvaldis.makeup.lib.job.DbMigrationJob
+import kuvaldis.makeup.lib.job.Job
+import kuvaldis.makeup.lib.job.JobExecutor
 
 import javax.sql.DataSource
 
@@ -15,5 +24,21 @@ class LibModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(DataSource).toProvider(H2DataSourceProvider).asEagerSingleton()
+        Multibinder<Job> jobsBinder = Multibinder.newSetBinder(binder(), Job)
+        jobsBinder.addBinding().to(DbMigrationJob)
+        bindJobExecutor()
+    }
+
+    private void bindJobExecutor() {
+        bind(JobExecutor).asEagerSingleton()
+        bindListener({ TypeLiteral<?> t ->
+            JobExecutor.isAssignableFrom(t.getRawType())
+        } as AbstractMatcher, { TypeLiteral<?> type, TypeEncounter<?> encounter ->
+            if (JobExecutor.isAssignableFrom(type.getRawType())) {
+                (encounter as TypeEncounter<JobExecutor>).register({ JobExecutor je ->
+                    je.runJobs()
+                } as InjectionListener<JobExecutor>)
+            }
+        } as TypeListener)
     }
 }

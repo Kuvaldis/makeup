@@ -9,6 +9,7 @@ import groovy.util.logging.Slf4j
  * Time: 16:50
  */
 @Slf4j
+@com.google.inject.Singleton
 class PropertiesBuilder {
 
     @Inject

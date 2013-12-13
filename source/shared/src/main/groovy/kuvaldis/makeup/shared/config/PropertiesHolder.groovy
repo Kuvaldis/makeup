@@ -5,6 +5,7 @@ package kuvaldis.makeup.shared.config
  * Date: 11.12.13
  * Time: 12:52
  */
+@com.google.inject.Singleton
 class PropertiesHolder {
 
     private ConfigObject configObject
