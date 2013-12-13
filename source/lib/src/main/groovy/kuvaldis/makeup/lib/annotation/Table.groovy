@@ -1,21 +1,16 @@
 package kuvaldis.makeup.lib.annotation
 
-import com.google.inject.BindingAnnotation
-
 import java.lang.annotation.ElementType
 import java.lang.annotation.Retention
 import java.lang.annotation.RetentionPolicy
 import java.lang.annotation.Target
 
-
 /**
- * User: NFadin
- * Date: 13.12.13
- * Time: 15:38
+ * @author Kuvaldis
+ * Create date: 14.12.13 0:20
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target([ElementType.PARAMETER, ElementType.FIELD])
-@BindingAnnotation
-public @interface MainDataSource {
-
+@Target(ElementType.TYPE)
+public @interface Table {
+    String value() default "";
 }
