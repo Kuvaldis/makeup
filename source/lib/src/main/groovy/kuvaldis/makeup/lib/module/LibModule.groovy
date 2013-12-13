@@ -13,7 +13,6 @@ import kuvaldis.makeup.lib.job.DbMigrationJob
 import kuvaldis.makeup.lib.job.Job
 import kuvaldis.makeup.lib.job.JobExecutor
 import kuvaldis.makeup.lib.module.provider.H2DataSourceProvider
-import kuvaldis.makeup.lib.module.provider.SqlProvider
 
 import javax.sql.DataSource
 
