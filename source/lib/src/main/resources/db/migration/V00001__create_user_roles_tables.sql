@@ -16,6 +16,7 @@ create table if not exists user_auth (
   user_id int not null,
   login varchar(255) not null,
   password varchar(255),
+  salt varchar(255),
   auth_way varchar(255) not null,
   foreign key (user_id) references user_(id),
   foreign key (auth_way) references auth_way(name)
