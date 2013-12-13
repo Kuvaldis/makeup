@@ -8,10 +8,12 @@ import com.google.inject.spi.InjectionListener
 import com.google.inject.spi.TypeEncounter
 import com.google.inject.spi.TypeListener
 import kuvaldis.makeup.lib.annotation.MainDataSource
-import kuvaldis.makeup.lib.db.H2DataSourceProvider
+import kuvaldis.makeup.lib.job.AddAdminJob
 import kuvaldis.makeup.lib.job.DbMigrationJob
 import kuvaldis.makeup.lib.job.Job
 import kuvaldis.makeup.lib.job.JobExecutor
+import kuvaldis.makeup.lib.module.provider.H2DataSourceProvider
+import kuvaldis.makeup.lib.module.provider.SqlProvider
 
 import javax.sql.DataSource
 
@@ -27,6 +29,7 @@ class LibModule extends AbstractModule {
         bind(DataSource).annotatedWith(MainDataSource).toProvider(H2DataSourceProvider).asEagerSingleton()
         Multibinder<Job> jobsBinder = Multibinder.newSetBinder(binder(), Job)
         jobsBinder.addBinding().to(DbMigrationJob)
+        jobsBinder.addBinding().to(AddAdminJob)
         bindJobExecutor()
     }
 

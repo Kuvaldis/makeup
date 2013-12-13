@@ -14,13 +14,18 @@ import javax.sql.DataSource
  */
 @Slf4j
 @com.google.inject.Singleton
-class DbMigrationJob implements Job {
+class DbMigrationJob extends AbstractJob {
 
     private Flyway flyway
 
     @Inject
     DbMigrationJob(@MainDataSource DataSource dataSource) {
         flyway = new Flyway(dataSource: dataSource)
+    }
+
+    @Override
+    JobPriority getPriority() {
+        return JobPriority.BIG
     }
 
     @Override

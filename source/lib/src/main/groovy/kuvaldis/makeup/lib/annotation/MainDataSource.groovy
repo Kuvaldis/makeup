@@ -7,6 +7,7 @@ import java.lang.annotation.Retention
 import java.lang.annotation.RetentionPolicy
 import java.lang.annotation.Target
 
+
 /**
  * User: NFadin
  * Date: 13.12.13
@@ -14,7 +15,7 @@ import java.lang.annotation.Target
  */
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.PARAMETER)
+@Target([ElementType.PARAMETER, ElementType.FIELD])
 @BindingAnnotation
 public @interface MainDataSource {
 

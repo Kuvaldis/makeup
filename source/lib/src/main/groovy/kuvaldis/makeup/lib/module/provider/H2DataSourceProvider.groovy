@@ -1,4 +1,4 @@
-package kuvaldis.makeup.lib.db
+package kuvaldis.makeup.lib.module.provider
 
 import com.google.inject.Inject
 import com.google.inject.Provider

@@ -7,5 +7,6 @@ package kuvaldis.makeup.lib.job
  */
 public interface Job {
 
+    JobPriority getPriority()
     void runJob()
 }
