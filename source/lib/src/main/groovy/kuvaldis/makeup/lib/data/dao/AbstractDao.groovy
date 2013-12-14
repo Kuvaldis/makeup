@@ -26,7 +26,7 @@ abstract class AbstractDao<T> implements Dao<T> {
 
     protected String tableName
 
-    def sql() {
+    protected sql() {
         sqlHolder.sql
     }
 
@@ -50,24 +50,29 @@ abstract class AbstractDao<T> implements Dao<T> {
         if (tableAn) {
             tableName = tableAn.value()
         } else {
-            tableName = domainClass.simpleName.toLowerCase()
+            tableName = domainClass.simpleName
         }
-        return dbLikeName(tableName)
+        return dbLikeTableName(tableName)
     }
 
     private static String calculateFieldName(Field field) {
-        dbLikeName(field.name)
+        dbLikeFieldName(field.name)
     }
 
-    def static String dbLikeName(String s) {
+    def static String dbLikeFieldName(String s) {
         CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, s)
+    }
+
+    def static String dbLikeTableName(String s) {
+        CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, s)
     }
 
     private T toDomain(GroovyRowResult groovyRowResult) {
         def result = domainClass.newInstance()
         def clazz = result.metaClass
-        clazz.properties.each { String k, v ->
-            clazz.setProperty(result, k, groovyRowResult.getProperty(k))
+        clazz.properties.each {
+            if (it.name == 'class') return
+            clazz.setProperty(result, it.name, groovyRowResult.getProperty(dbLikeFieldName(it.name)))
         }
         return result
     }
@@ -76,8 +81,9 @@ abstract class AbstractDao<T> implements Dao<T> {
         def fields = []
         def values = []
         t.properties.entrySet().each {
-            if (it.key == 'class' || it.key == 'id') return
-            fields << dbLikeName(it.key as String)
+            if (it.key == 'class') return
+            if (it.key == 'id' && !it.value) return
+            fields << dbLikeFieldName(it.key as String)
             values << it.value
         }
         "insert into $tableName(${fields.join(',')}) values('${values.join('\',\'')}')"
@@ -94,13 +100,15 @@ abstract class AbstractDao<T> implements Dao<T> {
 
     @Override
     T find(Object id) {
-        toDomain(sql().firstRow("select * from $tableName where $idFieldName = $id"))
+        toDomain(sql().firstRow("select * from $tableName where $idFieldName = '$id'".toString()))
     }
 
     @Override
     T create(T t) {
         def ids = sql().executeInsert(getCreateStatement(t))
-        t.metaClass.setProperty(t, idFieldName, ids[0][0])
+        if (ids) {
+            t.metaClass.setProperty(t, idFieldName, ids[0][0])
+        }
         return t
     }
 
