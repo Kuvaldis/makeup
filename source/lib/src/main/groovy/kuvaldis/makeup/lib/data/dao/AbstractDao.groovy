@@ -1,5 +1,6 @@
 package kuvaldis.makeup.lib.data.dao
 
+import com.google.common.base.CaseFormat
 import com.google.inject.Inject
 import groovy.sql.GroovyRowResult
 import kuvaldis.makeup.lib.annotation.Id
@@ -51,11 +52,15 @@ abstract class AbstractDao<T> implements Dao<T> {
         } else {
             tableName = domainClass.simpleName.toLowerCase()
         }
-        return tableName
+        return dbLikeName(tableName)
     }
 
     private static String calculateFieldName(Field field) {
-        field.name
+        dbLikeName(field.name)
+    }
+
+    def static String dbLikeName(String s) {
+        CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, s)
     }
 
     private T toDomain(GroovyRowResult groovyRowResult) {
@@ -72,7 +77,7 @@ abstract class AbstractDao<T> implements Dao<T> {
         def values = []
         t.properties.entrySet().each {
             if (it.key == 'class' || it.key == 'id') return
-            fields << it.key
+            fields << dbLikeName(it.key as String)
             values << it.value
         }
         "insert into $tableName(${fields.join(',')}) values('${values.join('\',\'')}')"
