@@ -3,6 +3,7 @@ package kuvaldis.makeup.lib.data.domain
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
 import kuvaldis.makeup.lib.annotation.Id
+import kuvaldis.makeup.lib.annotation.Table
 
 /**
  * @author Kuvaldis
@@ -10,7 +11,9 @@ import kuvaldis.makeup.lib.annotation.Id
  */
 @ToString
 @EqualsAndHashCode
+@Table('users')
 class User {
     @Id
     Integer id
+    List<String> roles
 }

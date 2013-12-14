@@ -7,7 +7,7 @@ package kuvaldis.makeup.lib.data.dao
 public interface Dao<T> {
 
     T find(Object id);
-    def create(T t);
+    T create(T t);
     def update(T t);
     def delete(Object id);
 }

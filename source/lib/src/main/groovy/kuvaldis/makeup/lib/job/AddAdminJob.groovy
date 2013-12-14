@@ -22,7 +22,7 @@ class AddAdminJob extends AbstractJob {
     @Override
     void runJob() {
         sqlHolder.sql.withTransaction {
-            userDao.create(new User())
+            userDao.create(new User(roles: ['TATAKA']))
         }
     }
 }

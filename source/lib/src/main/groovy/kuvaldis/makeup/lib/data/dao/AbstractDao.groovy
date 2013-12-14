@@ -21,9 +21,9 @@ abstract class AbstractDao<T> implements Dao<T> {
 
     def Class<T> domainClass
 
-    def String idFieldName
+    protected String idFieldName
 
-    def String tableName
+    protected String tableName
 
     def sql() {
         sqlHolder.sql
@@ -37,13 +37,13 @@ abstract class AbstractDao<T> implements Dao<T> {
         tableName = calculateTableName()
     }
 
-    private void calculateIdFieldName() {
+    private def calculateIdFieldName() {
         calculateFieldName(domainClass.declaredFields.find {
             it.annotations*.annotationType().contains(Id)
         })
     }
 
-    private Object calculateTableName() {
+    private def calculateTableName() {
         def tableName
         def tableAn = domainClass.getAnnotation(Table)
         if (tableAn) {
@@ -60,8 +60,9 @@ abstract class AbstractDao<T> implements Dao<T> {
 
     private T toDomain(GroovyRowResult groovyRowResult) {
         def result = domainClass.newInstance()
-        domainClass.fields.each {
-            result.metaClass.setProperty(result, it.name, groovyRowResult.getProperty(it.name))
+        def clazz = result.metaClass
+        clazz.properties.each { String k, v ->
+            clazz.setProperty(result, k, groovyRowResult.getProperty(k))
         }
         return result
     }
@@ -70,11 +71,11 @@ abstract class AbstractDao<T> implements Dao<T> {
         def fields = []
         def values = []
         t.properties.entrySet().each {
-            if (it == 'class') return
+            if (it.key == 'class' || it.key == 'id') return
             fields << it.key
             values << it.value
         }
-        "insert into $tableName (${fields.join(',')}) values(${values.join(',')})"
+        "insert into $tableName(${fields.join(',')}) values('${values.join('\',\'')}')"
     }
 
     private String getUpdateStatement(T t) {
@@ -92,8 +93,10 @@ abstract class AbstractDao<T> implements Dao<T> {
     }
 
     @Override
-    def create(T t) {
-        sql().executeInsert(getCreateStatement(t))
+    T create(T t) {
+        def ids = sql().executeInsert(getCreateStatement(t))
+        t.metaClass.setProperty(t, idFieldName, ids[0][0])
+        return t
     }
 
     @Override
