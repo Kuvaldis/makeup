@@ -106,7 +106,7 @@ abstract class AbstractDao<T> implements Dao<T> {
 
     @Override
     def delete(Object id) {
-        sql().execute("delete from ${getTableName()} where $idFieldName = $id")
+        sql().execute("delete from $tableName where $idFieldName = $id")
     }
 
 
