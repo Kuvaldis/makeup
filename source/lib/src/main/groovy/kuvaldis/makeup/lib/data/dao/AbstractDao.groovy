@@ -39,7 +39,7 @@ abstract class AbstractDao<T> implements Dao<T> {
 
     private void calculateIdFieldName() {
         calculateFieldName(domainClass.declaredFields.find {
-            it.annotations.contains(Id)
+            it.annotations*.annotationType().contains(Id)
         })
     }
 
