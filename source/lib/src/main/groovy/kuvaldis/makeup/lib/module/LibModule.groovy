@@ -10,6 +10,7 @@ import com.google.inject.spi.TypeListener
 import kuvaldis.makeup.lib.annotation.MainDataSource
 import kuvaldis.makeup.lib.data.SqlHolder
 import kuvaldis.makeup.lib.data.dao.AuthWayDao
+import kuvaldis.makeup.lib.data.dao.UserAuthDao
 import kuvaldis.makeup.lib.data.dao.UserDao
 import kuvaldis.makeup.lib.job.AddAdminJob
 import kuvaldis.makeup.lib.job.DbMigrationJob
@@ -42,6 +43,7 @@ class LibModule extends AbstractModule {
     private void bindDao() {
         bind(UserDao)
         bind(AuthWayDao)
+        bind(UserAuthDao)
     }
 
     void bindServices() {

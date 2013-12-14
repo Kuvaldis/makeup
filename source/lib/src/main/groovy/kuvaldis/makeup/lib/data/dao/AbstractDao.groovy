@@ -82,7 +82,7 @@ abstract class AbstractDao<T> implements Dao<T> {
         def values = []
         t.properties.entrySet().each {
             if (it.key == 'class') return
-            if (it.key == 'id' && !it.value) return
+            if (it.key == idFieldName && !it.value) return
             fields << dbLikeFieldName(it.key as String)
             values << it.value
         }

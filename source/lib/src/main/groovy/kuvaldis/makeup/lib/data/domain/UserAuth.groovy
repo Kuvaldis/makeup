@@ -11,11 +11,10 @@ import kuvaldis.makeup.lib.annotation.Id
 @ToString
 @EqualsAndHashCode
 class UserAuth {
-
     @Id
     Integer id
     Integer userId
     String login
     String password
-    String auth_way
+    AuthWay.AuthWayKind authWay
 }
