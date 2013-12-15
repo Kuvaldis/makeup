@@ -15,7 +15,7 @@ class SharedModule extends AbstractModule {
         bind(PropertiesBuilder)
     }
 
-    @Provides
+    @Provides @com.google.inject.Singleton
     public List<String> configFilesList() {
         [
                 'conf/server.groovy',
