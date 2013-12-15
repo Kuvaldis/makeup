@@ -7,7 +7,7 @@ import kuvaldis.makeup.lib.sql.SqlHolder
  * @author Kuvaldis
  * Create date: 15.12.13 2:02
  */
-abstract class AbstractService {
+abstract class WithSqlService {
 
     @Inject
     SqlHolder sqlHolder

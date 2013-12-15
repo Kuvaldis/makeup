@@ -8,6 +8,7 @@ import com.google.inject.spi.InjectionListener
 import com.google.inject.spi.TypeEncounter
 import com.google.inject.spi.TypeListener
 import kuvaldis.makeup.lib.annotation.MainDataSource
+import kuvaldis.makeup.lib.annotation.PasswordEncrypt
 import kuvaldis.makeup.lib.data.dao.AuthWayDao
 import kuvaldis.makeup.lib.data.dao.ProfileDao
 import kuvaldis.makeup.lib.data.dao.UserAuthDao
@@ -15,6 +16,8 @@ import kuvaldis.makeup.lib.data.dao.UserDao
 import kuvaldis.makeup.lib.job.*
 import kuvaldis.makeup.lib.module.provider.H2DataSourceProvider
 import kuvaldis.makeup.lib.service.AuthService
+import kuvaldis.makeup.lib.service.EncryptionService
+import kuvaldis.makeup.lib.service.PasswordEncryptionService
 import kuvaldis.makeup.lib.service.UserService
 import kuvaldis.makeup.lib.sql.SqlHolder
 
@@ -48,6 +51,7 @@ class LibModule extends AbstractModule {
     }
 
     void bindServices() {
+        bind(EncryptionService).annotatedWith(PasswordEncrypt).to(PasswordEncryptionService)
         bind(UserService)
         bind(AuthService)
     }

@@ -1,6 +1,7 @@
 package kuvaldis.makeup.lib.service
 
 import com.google.inject.Inject
+import kuvaldis.makeup.lib.annotation.PasswordEncrypt
 import kuvaldis.makeup.lib.data.dao.ProfileDao
 import kuvaldis.makeup.lib.data.dao.UserAuthDao
 import kuvaldis.makeup.lib.data.dao.UserDao
@@ -11,11 +12,14 @@ import kuvaldis.makeup.lib.data.domain.*
  * Create date: 15.12.13 2:02
  */
 @com.google.inject.Singleton
-class UserService extends AbstractService {
+class UserService extends WithSqlService {
 
     @Inject UserDao userDao
     @Inject UserAuthDao userAuthDao
     @Inject ProfileDao profileDao
+
+    @Inject @PasswordEncrypt
+    EncryptionService encryptionService
 
     CreateUserResult createUser(String username, String login, String password, Role role) {
         def result = CreateUserResult.SUCCESS
@@ -39,7 +43,7 @@ class UserService extends AbstractService {
         return result
     }
 
-    String encryptPassword(String s) {
-        return s
+    String encryptPassword(String password) {
+        return encryptionService.encrypt(password)
     }
 }

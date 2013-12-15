@@ -3,4 +3,5 @@ dependencies {
     compile group: 'com.jolbox', name: 'bonecp', version: '0.8.0.RELEASE'
     compile group: 'com.google.guava', name: 'guava', version: '15.0'
     compile group: 'com.googlecode.flyway', name: 'flyway-core', version: '2.2.1'
+    compile group: 'commons-codec', name: 'commons-codec', version: '1.8'
 }
