@@ -1,4 +1,4 @@
-package kuvaldis.makeup.lib.data
+package kuvaldis.makeup.lib.sql
 
 import com.google.inject.Inject
 import groovy.sql.Sql
@@ -10,12 +10,13 @@ import javax.sql.DataSource
  * @author Kuvaldis
  * Create date: 13.12.13 23:15
  */
+@com.google.inject.Singleton
 class SqlHolder {
 
     @Inject @MainDataSource
     private DataSource dataSource
 
-    private ThreadLocal<Sql> sqlThreadLocal = new ThreadLocal<>();
+    ThreadLocal<Sql> sqlThreadLocal = new ThreadLocal<>();
 
     def getSql() {
         def sql = sqlThreadLocal.get()

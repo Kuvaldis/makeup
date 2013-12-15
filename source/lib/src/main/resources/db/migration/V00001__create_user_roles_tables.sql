@@ -25,5 +25,6 @@ create table if not exists profile (
   id int default profile_seq.nextval primary key,
   user_id int not null,
   username varchar(255) not null,
-  foreign key (user_id) references users(id)
+  foreign key (user_id) references users(id),
+  unique (username)
 );

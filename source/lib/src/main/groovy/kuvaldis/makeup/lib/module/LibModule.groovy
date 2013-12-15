@@ -8,8 +8,8 @@ import com.google.inject.spi.InjectionListener
 import com.google.inject.spi.TypeEncounter
 import com.google.inject.spi.TypeListener
 import kuvaldis.makeup.lib.annotation.MainDataSource
-import kuvaldis.makeup.lib.data.SqlHolder
 import kuvaldis.makeup.lib.data.dao.AuthWayDao
+import kuvaldis.makeup.lib.data.dao.ProfileDao
 import kuvaldis.makeup.lib.data.dao.UserAuthDao
 import kuvaldis.makeup.lib.data.dao.UserDao
 import kuvaldis.makeup.lib.job.AddAdminJob
@@ -17,6 +17,8 @@ import kuvaldis.makeup.lib.job.DbMigrationJob
 import kuvaldis.makeup.lib.job.Job
 import kuvaldis.makeup.lib.job.JobExecutor
 import kuvaldis.makeup.lib.module.provider.H2DataSourceProvider
+import kuvaldis.makeup.lib.service.UserService
+import kuvaldis.makeup.lib.sql.SqlHolder
 
 import javax.sql.DataSource
 
@@ -29,25 +31,26 @@ class LibModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(DataSource).annotatedWith(MainDataSource).toProvider(H2DataSourceProvider).asEagerSingleton()
         bindDataObjects()
+        bindServices()
         bindJobs()
     }
 
     private void bindDataObjects() {
+        bind(DataSource).annotatedWith(MainDataSource).toProvider(H2DataSourceProvider).asEagerSingleton()
         bind(SqlHolder)
         bindDao()
-        bindServices()
     }
 
     private void bindDao() {
         bind(UserDao)
         bind(AuthWayDao)
         bind(UserAuthDao)
+        bind(ProfileDao)
     }
 
     void bindServices() {
-
+        bind(UserService)
     }
 
     private void bindJobs() {

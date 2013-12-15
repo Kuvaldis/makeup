@@ -5,7 +5,7 @@ import com.google.inject.Inject
 import groovy.sql.GroovyRowResult
 import kuvaldis.makeup.lib.annotation.Id
 import kuvaldis.makeup.lib.annotation.Table
-import kuvaldis.makeup.lib.data.SqlHolder
+import kuvaldis.makeup.lib.sql.SqlHolder
 
 import java.lang.reflect.Field
 import java.lang.reflect.ParameterizedType
