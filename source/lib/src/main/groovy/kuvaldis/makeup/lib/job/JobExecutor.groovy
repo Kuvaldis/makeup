@@ -28,7 +28,7 @@ class JobExecutor {
             log.info("Start $jobName")
             def start = System.currentTimeMillis()
             it.runJob()
-            log.info("Done $jobName in ${System.currentTimeMillis() - start}")
+            log.info("Done $jobName in ${System.currentTimeMillis() - start} ms")
         }
     }
 }
