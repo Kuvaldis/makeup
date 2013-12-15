@@ -11,19 +11,19 @@ import groovy.util.logging.Slf4j
 @Slf4j
 class JobExecutor {
 
-    Set<Job> jobs = []
+    List<Job> jobs = []
 
     @Inject
     JobExecutor(Set<Job> jobs) {
-        jobs.sort {
+        this.jobs = jobs.asList().sort {
             it.priority.priority
         }
-        this.jobs = jobs
     }
 
     void runJobs() {
-        log.info("Execute lib jobs")
+        log.info('Execute lib jobs')
         jobs.each {
+            log.info("Start")
             it.runJob()
         }
     }

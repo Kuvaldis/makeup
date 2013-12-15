@@ -12,11 +12,9 @@ import kuvaldis.makeup.lib.data.dao.AuthWayDao
 import kuvaldis.makeup.lib.data.dao.ProfileDao
 import kuvaldis.makeup.lib.data.dao.UserAuthDao
 import kuvaldis.makeup.lib.data.dao.UserDao
-import kuvaldis.makeup.lib.job.AddAdminJob
-import kuvaldis.makeup.lib.job.DbMigrationJob
-import kuvaldis.makeup.lib.job.Job
-import kuvaldis.makeup.lib.job.JobExecutor
+import kuvaldis.makeup.lib.job.*
 import kuvaldis.makeup.lib.module.provider.H2DataSourceProvider
+import kuvaldis.makeup.lib.service.AuthService
 import kuvaldis.makeup.lib.service.UserService
 import kuvaldis.makeup.lib.sql.SqlHolder
 
@@ -51,12 +49,14 @@ class LibModule extends AbstractModule {
 
     void bindServices() {
         bind(UserService)
+        bind(AuthService)
     }
 
     private void bindJobs() {
         Multibinder<Job> jobsBinder = Multibinder.newSetBinder(binder(), Job)
         jobsBinder.addBinding().to(DbMigrationJob)
         jobsBinder.addBinding().to(AddAdminJob)
+        jobsBinder.addBinding().to(AddDataJob)
         bindJobExecutor()
     }
 

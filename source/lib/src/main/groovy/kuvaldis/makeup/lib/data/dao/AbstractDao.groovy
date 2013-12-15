@@ -68,6 +68,9 @@ abstract class AbstractDao<T> implements Dao<T> {
     }
 
     private T toDomain(GroovyRowResult groovyRowResult) {
+        if (!groovyRowResult) {
+            return null
+        }
         def result = domainClass.newInstance()
         def clazz = result.metaClass
         clazz.properties.each {
