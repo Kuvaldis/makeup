@@ -1,7 +1,6 @@
 package kuvaldis.makeup.lib.service
 
 import com.google.inject.Inject
-import kuvaldis.makeup.lib.data.dao.AuthWayDao
 import kuvaldis.makeup.lib.data.dao.ProfileDao
 import kuvaldis.makeup.lib.data.dao.UserAuthDao
 import kuvaldis.makeup.lib.data.dao.UserDao
@@ -17,7 +16,6 @@ class UserService extends AbstractService {
     @Inject UserDao userDao
     @Inject UserAuthDao userAuthDao
     @Inject ProfileDao profileDao
-    @Inject AuthWayDao authWayDao
 
     def checkAndCreateUser(String username, String login, String password, Role role) {
         sql().withTransaction {
