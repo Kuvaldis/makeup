@@ -26,8 +26,9 @@ class JobExecutor {
         jobs.each {
             def jobName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, it.class.simpleName).replace('_', ' ')
             log.info("Start $jobName")
+            def start = System.currentTimeMillis()
             it.runJob()
-            log.info("Done $jobName")
+            log.info("Done $jobName in ${System.currentTimeMillis() - start}")
         }
     }
 }
