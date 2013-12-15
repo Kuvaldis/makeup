@@ -1,5 +1,6 @@
 package kuvaldis.makeup.lib.data.dao
 
+import kuvaldis.makeup.lib.data.domain.AuthWay
 import kuvaldis.makeup.lib.data.domain.UserAuth
 
 /**
@@ -8,4 +9,8 @@ import kuvaldis.makeup.lib.data.domain.UserAuth
  */
 @com.google.inject.Singleton
 class UserAuthDao extends AbstractDao<UserAuth> {
+
+    UserAuth findByLoginAndAuthWay(String login, AuthWay.AuthWayKind authWayKind) {
+        executeSelect("login = '$login' and auth_way = '$authWayKind'")
+    }
 }

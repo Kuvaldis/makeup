@@ -103,7 +103,11 @@ abstract class AbstractDao<T> implements Dao<T> {
 
     @Override
     T find(Object id) {
-        toDomain(sql().firstRow("select * from $tableName where $idFieldName = '$id'".toString()))
+        executeSelect("$idFieldName = '$id'")
+    }
+
+    protected T executeSelect(String whereStatement) {
+        toDomain(sql().firstRow("select * from $tableName where $whereStatement".toString()))
     }
 
     @Override
