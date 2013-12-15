@@ -26,8 +26,8 @@ abstract class AbstractDao<T> implements Dao<T> {
 
     protected String tableName
 
-    private String selectStatement
-    private String deleteStatement
+    final String selectStatement
+    final String deleteStatement
 
     protected sql() {
         sqlHolder.sql
@@ -39,10 +39,6 @@ abstract class AbstractDao<T> implements Dao<T> {
         domainClass = pt.actualTypeArguments[0] as Class<T>;
         idFieldName = calculateIdFieldName()
         tableName = calculateTableName()
-        prepareStatements()
-    }
-
-    def prepareStatements() {
         selectStatement = "select * from $tableName where "
         deleteStatement = "delete from $tableName where "
     }
@@ -96,16 +92,23 @@ abstract class AbstractDao<T> implements Dao<T> {
             if (it.key == 'class') return
             if (it.key == idFieldName && !it.value) return
             fields << dbLikeFieldName(it.key as String)
-            values << it.value
+            values << prepareValue(it.value)
         }
         "insert into $tableName(${fields.join(',')}) values('${values.join('\',\'')}')"
+    }
+
+    static def prepareValue(def p) {
+        if (p instanceof Enum) {
+            return p.name()
+        }
+        return p
     }
 
     private GString getUpdateStatement(T t) {
         def list = []
         t.properties.each { k, v ->
             if (k == idFieldName) return
-            list << "$k = $v"
+            list << "$k = ${prepareValue(v)}"
         }
         "update $tableName set ${list.join(',')}"
     }
@@ -115,27 +118,26 @@ abstract class AbstractDao<T> implements Dao<T> {
         executeSelect([(idFieldName) : id])
     }
 
-    private execute(String prefixStmt, Map<String, ?> fieldValueMap, Closure cb) {
+    private static execute(Map<String, ?> fieldValueMap, Closure cb) {
         def params = [:]
         def whereRestrictions = [:]
         fieldValueMap.each { k, v ->
-            params << [("${k}Param".toString()) : v]
+            params << [("${k}Param".toString()) : prepareValue(v)]
             whereRestrictions << [("${dbLikeFieldName(k)}".toString()) : "${k}Param".toString()]
         }
-        cb.call(prefixStmt, whereRestrictions, params)
+        cb.call(whereRestrictions, params)
     }
 
     protected T executeSelect(Map<String, ?> fieldValueMap) {
-        execute(selectStatement, fieldValueMap) { pref, wr, p ->
-            def where = wr.collect { k, v ->
-                "$k = :$v"
-            }.join(' and ')
-            toDomain(sql().firstRow(pref + where, p as Map))
+        execute(fieldValueMap) { wr, p ->
+            toDomain(sql().firstRow(selectStatement + toAddString(wr), p as Map))
         } as T
     }
 
-    protected void executeDelete(Map<String, ?> fieldValueMap) {
-
+    static String toAddString(wr) {
+        wr.collect { k, v ->
+            "$k = :$v"
+        }.join(' and ')
     }
 
     @Override
@@ -152,9 +154,15 @@ abstract class AbstractDao<T> implements Dao<T> {
         sql().executeUpdate(getUpdateStatement(t))
     }
 
+    protected void executeDelete(Map<String, ?> fieldValueMap) {
+        execute(fieldValueMap) { pref, wr, p ->
+            sql().execute(deleteStatement + toAddString(wr), p as Map)
+        }
+    }
+
     @Override
     def delete(Object id) {
-        sql().execute("delete from $tableName where $idFieldName = $id")
+        executeDelete([(idFieldName) : id])
     }
 
 
