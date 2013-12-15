@@ -20,6 +20,8 @@ class AddDataJob extends AbstractJob {
 
     @Override
     void runJob() {
-        authService.checkAndCreateAuthWay(AuthWay.AuthWayKind.MAIN)
+        AuthWay.AuthWayKind.values().each {
+            authService.checkAndCreateAuthWay(it)
+        }
     }
 }
