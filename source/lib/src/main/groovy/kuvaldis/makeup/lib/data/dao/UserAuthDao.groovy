@@ -11,6 +11,6 @@ import kuvaldis.makeup.lib.data.domain.UserAuth
 class UserAuthDao extends AbstractDao<UserAuth> {
 
     UserAuth findByLoginAndAuthWay(String login, AuthWay.AuthWayKind authWayKind) {
-        executeSelect("login = '$login' and auth_way = '$authWayKind'")
+        executeSelect([login: login, authWay: authWayKind])
     }
 }

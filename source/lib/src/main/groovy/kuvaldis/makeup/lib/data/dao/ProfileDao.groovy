@@ -9,6 +9,6 @@ import kuvaldis.makeup.lib.data.domain.Profile
 @com.google.inject.Singleton
 class ProfileDao extends AbstractDao<Profile>{
     Profile findByUsername(String username) {
-        executeSelect("username = '$username'")
+        executeSelect(username: username)
     }
 }

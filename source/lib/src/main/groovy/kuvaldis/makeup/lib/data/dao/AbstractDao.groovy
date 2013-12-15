@@ -26,6 +26,9 @@ abstract class AbstractDao<T> implements Dao<T> {
 
     protected String tableName
 
+    private String selectStatement
+    private String deleteStatement
+
     protected sql() {
         sqlHolder.sql
     }
@@ -36,6 +39,12 @@ abstract class AbstractDao<T> implements Dao<T> {
         domainClass = pt.actualTypeArguments[0] as Class<T>;
         idFieldName = calculateIdFieldName()
         tableName = calculateTableName()
+        prepareStatements()
+    }
+
+    def prepareStatements() {
+        selectStatement = "select * from $tableName where "
+        deleteStatement = "delete from $tableName where "
     }
 
     private def calculateIdFieldName() {
@@ -67,7 +76,7 @@ abstract class AbstractDao<T> implements Dao<T> {
         CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, s)
     }
 
-    private T toDomain(GroovyRowResult groovyRowResult) {
+    def T toDomain(GroovyRowResult groovyRowResult) {
         if (!groovyRowResult) {
             return null
         }
@@ -92,7 +101,7 @@ abstract class AbstractDao<T> implements Dao<T> {
         "insert into $tableName(${fields.join(',')}) values('${values.join('\',\'')}')"
     }
 
-    private String getUpdateStatement(T t) {
+    private GString getUpdateStatement(T t) {
         def list = []
         t.properties.each { k, v ->
             if (k == idFieldName) return
@@ -103,11 +112,30 @@ abstract class AbstractDao<T> implements Dao<T> {
 
     @Override
     T find(Object id) {
-        executeSelect("$idFieldName = '$id'")
+        executeSelect([(idFieldName) : id])
     }
 
-    protected T executeSelect(String whereStatement) {
-        toDomain(sql().firstRow("select * from $tableName where $whereStatement".toString()))
+    private execute(String prefixStmt, Map<String, ?> fieldValueMap, Closure cb) {
+        def params = [:]
+        def whereRestrictions = [:]
+        fieldValueMap.each { k, v ->
+            params << [("${k}Param".toString()) : v]
+            whereRestrictions << [("${dbLikeFieldName(k)}".toString()) : "${k}Param".toString()]
+        }
+        cb.call(prefixStmt, whereRestrictions, params)
+    }
+
+    protected T executeSelect(Map<String, ?> fieldValueMap) {
+        execute(selectStatement, fieldValueMap) { pref, wr, p ->
+            def where = wr.collect { k, v ->
+                "$k = :$v"
+            }.join(' and ')
+            toDomain(sql().firstRow(pref + where, p as Map))
+        } as T
+    }
+
+    protected void executeDelete(Map<String, ?> fieldValueMap) {
+
     }
 
     @Override
