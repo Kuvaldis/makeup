@@ -28,6 +28,9 @@ abstract class AbstractDao<T> implements Dao<T> {
 
     final String selectStatement
     final String deleteStatement
+    final String createStatementP1
+    final String createStatementP2 = ") values ("
+    final String createStatementP3 = ")"
 
     protected sql() {
         sqlHolder.sql
@@ -41,6 +44,7 @@ abstract class AbstractDao<T> implements Dao<T> {
         tableName = calculateTableName()
         selectStatement = "select * from $tableName where "
         deleteStatement = "delete from $tableName where "
+        createStatementP1 = "insert into $tableName ("
     }
 
     private def calculateIdFieldName() {
@@ -85,18 +89,6 @@ abstract class AbstractDao<T> implements Dao<T> {
         return result
     }
 
-    private String getCreateStatement(T t) {
-        def fields = []
-        def values = []
-        t.properties.entrySet().each {
-            if (it.key == 'class') return
-            if (it.key == idFieldName && !it.value) return
-            fields << dbLikeFieldName(it.key as String)
-            values << prepareValue(it.value)
-        }
-        "insert into $tableName(${fields.join(',')}) values('${values.join('\',\'')}')"
-    }
-
     static def prepareValue(def p) {
         if (p instanceof Enum) {
             return p.name()
@@ -115,34 +107,49 @@ abstract class AbstractDao<T> implements Dao<T> {
 
     @Override
     T find(Object id) {
-        executeSelect([(idFieldName) : id])
+        executeSelect([(idFieldName): id])
     }
 
     private static execute(Map<String, ?> fieldValueMap, Closure cb) {
         def params = [:]
-        def whereRestrictions = [:]
+        def fieldToParam = [:]
         fieldValueMap.each { k, v ->
-            params << [("${k}Param".toString()) : prepareValue(v)]
-            whereRestrictions << [("${dbLikeFieldName(k)}".toString()) : "${k}Param".toString()]
+            params << [("${k}Param".toString()): prepareValue(v)]
+            fieldToParam << [("${dbLikeFieldName(k)}".toString()): "${k}Param".toString()]
         }
-        cb.call(whereRestrictions, params)
+        cb.call(fieldToParam, params)
     }
 
     protected T executeSelect(Map<String, ?> fieldValueMap) {
         execute(fieldValueMap) { wr, p ->
-            toDomain(sql().firstRow(selectStatement + toAddString(wr), p as Map))
+            toDomain(sql().firstRow(selectStatement + toAndString(wr), p as Map))
         } as T
     }
 
-    static String toAddString(wr) {
+    static String toAndString(wr) {
         wr.collect { k, v ->
             "$k = :$v"
         }.join(' and ')
     }
 
+    protected List<List> executeCreate(Map<String, ?> fieldValueMap) {
+        execute(fieldValueMap) { Map f2v, p ->
+            sql().executeInsert(createStatementP1 + "${f2v.keySet().join(', ')}" +
+                    createStatementP2 + "${f2v.values().collect { ":$it" }.join(', ')}" +
+                    createStatementP3, p as Map)
+
+        } as List<List>
+    }
+
     @Override
     T create(T t) {
-        def ids = sql().executeInsert(getCreateStatement(t))
+        def fieldValueMap = [:]
+        t.properties.entrySet().each {
+            if (it.key == 'class') return
+            if (it.key == idFieldName && !it.value) return
+            fieldValueMap << [(dbLikeFieldName(it.key as String)): prepareValue(it.value)]
+        }
+        def ids = executeCreate(fieldValueMap)
         if (ids) {
             t.metaClass.setProperty(t, idFieldName, ids[0][0])
         }
@@ -156,13 +163,13 @@ abstract class AbstractDao<T> implements Dao<T> {
 
     protected void executeDelete(Map<String, ?> fieldValueMap) {
         execute(fieldValueMap) { pref, wr, p ->
-            sql().execute(deleteStatement + toAddString(wr), p as Map)
+            sql().execute(deleteStatement + toAndString(wr), p as Map)
         }
     }
 
     @Override
     def delete(Object id) {
-        executeDelete([(idFieldName) : id])
+        executeDelete([(idFieldName): id])
     }
 
 
