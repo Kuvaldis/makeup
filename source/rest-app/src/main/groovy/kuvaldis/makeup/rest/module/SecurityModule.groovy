@@ -1,7 +1,9 @@
 package kuvaldis.makeup.rest.module
 
+import kuvaldis.makeup.rest.security.AuthCredentialsMatcher
+import kuvaldis.makeup.rest.security.AuthRealm
+import org.apache.shiro.authc.credential.CredentialsMatcher
 import org.apache.shiro.guice.web.ShiroWebModule
-import org.apache.shiro.realm.text.PropertiesRealm
 
 import javax.servlet.ServletContext
 
@@ -17,11 +19,7 @@ class SecurityModule extends ShiroWebModule {
 
     @Override
     protected void configureShiroWeb() {
-        bindRealm().toInstance(new PropertiesRealm().with {
-            useXmlFormat = true
-            resourcePath = 'classpath:shiro.xml'
-            return it
-        })
-        AUTHC_BASIC
+        bind(CredentialsMatcher).to(AuthCredentialsMatcher)
+        bindRealm().to(AuthRealm)
     }
 }
