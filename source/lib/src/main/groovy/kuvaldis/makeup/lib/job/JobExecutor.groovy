@@ -1,5 +1,6 @@
 package kuvaldis.makeup.lib.job
 
+import com.google.common.base.CaseFormat
 import com.google.inject.Inject
 import groovy.util.logging.Slf4j
 
@@ -23,8 +24,10 @@ class JobExecutor {
     void runJobs() {
         log.info('Execute lib jobs')
         jobs.each {
-            log.info("Start")
+            def jobName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, it.class.simpleName).replace('_', ' ')
+            log.info("Start $jobName")
             it.runJob()
+            log.info("Done $jobName")
         }
     }
 }
