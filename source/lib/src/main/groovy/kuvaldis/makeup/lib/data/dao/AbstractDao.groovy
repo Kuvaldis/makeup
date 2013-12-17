@@ -31,6 +31,7 @@ abstract class AbstractDao<T> implements Dao<T> {
     final String createStatementP1
     final String createStatementP2 = ") values ("
     final String createStatementP3 = ")"
+    final String updateStatement
 
     protected sql() {
         sqlHolder.sql
@@ -45,6 +46,7 @@ abstract class AbstractDao<T> implements Dao<T> {
         selectStatement = "select * from $tableName where "
         deleteStatement = "delete from $tableName where "
         createStatementP1 = "insert into $tableName ("
+        updateStatement = "update $tableName set "
     }
 
     private def calculateIdFieldName() {
@@ -96,15 +98,6 @@ abstract class AbstractDao<T> implements Dao<T> {
         return p
     }
 
-    private GString getUpdateStatement(T t) {
-        def list = []
-        t.properties.each { k, v ->
-            if (k == idFieldName) return
-            list << "$k = ${prepareValue(v)}"
-        }
-        "update $tableName set ${list.join(',')}"
-    }
-
     @Override
     T find(Object id) {
         executeSelect([(idFieldName): id])
@@ -122,14 +115,22 @@ abstract class AbstractDao<T> implements Dao<T> {
 
     protected T executeSelect(Map<String, ?> fieldValueMap) {
         execute(fieldValueMap) { wr, p ->
-            toDomain(sql().firstRow(selectStatement + toAndString(wr), p as Map))
+            toDomain(sql().firstRow(selectStatement + toAndSeparatedKVString(wr), p as Map))
         } as T
     }
 
-    static String toAndString(wr) {
+    static String toAndSeparatedKVString(wr) {
+        toSeparatedString(wr, ' and ')
+    }
+
+    static String toCommaSeparatedKVString(wr) {
+        toSeparatedString(wr, ', ')
+    }
+
+    static String toSeparatedString(wr, String separator) {
         wr.collect { k, v ->
             "$k = :$v"
-        }.join(' and ')
+        }.join(separator)
     }
 
     protected List<List> executeCreate(Map<String, ?> fieldValueMap) {
@@ -156,14 +157,25 @@ abstract class AbstractDao<T> implements Dao<T> {
         return t
     }
 
+    protected executeUpdate(Map<String, ?> fieldValueMap) {
+        execute(fieldValueMap) { Map f2v, p ->
+            sql().executeUpdate(updateStatement + toCommaSeparatedKVString(f2v))
+        }
+    }
+
     @Override
     def update(T t) {
-        sql().executeUpdate(getUpdateStatement(t))
+        def fieldValueMap = [:]
+        t.properties.each { k, v ->
+            if (k == idFieldName || k == 'class') return
+            fieldValueMap << [k, v]
+        }
+        sql().executeUpdate(fieldValueMap)
     }
 
     protected void executeDelete(Map<String, ?> fieldValueMap) {
         execute(fieldValueMap) { pref, wr, p ->
-            sql().execute(deleteStatement + toAndString(wr), p as Map)
+            sql().execute(deleteStatement + toAndSeparatedKVString(wr), p as Map)
         }
     }
 

@@ -6,7 +6,7 @@ package kuvaldis.makeup.lib.data.domain
  */
 enum CreateUserResult {
 
-    SUCCESS('success'),
+    SUCCESS('Success'),
     LOGIN_EXISTS('Login already exists'),
     USERNAME_EXISTS('Username already exists')
 
