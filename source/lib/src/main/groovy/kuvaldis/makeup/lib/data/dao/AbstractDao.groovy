@@ -108,35 +108,35 @@ abstract class AbstractDao<T> implements Dao<T> {
         def fieldToParam = [:]
         fieldValueMap.each { k, v ->
             params << [("${k}Param".toString()): prepareValue(v)]
-            fieldToParam << [("${dbLikeFieldName(k)}".toString()): "${k}Param".toString()]
+            fieldToParam << [("${dbLikeFieldName(k)}".toString()): ":${k}Param".toString()]
         }
         cb.call(fieldToParam, params)
     }
 
     protected T executeSelect(Map<String, ?> fieldValueMap) {
         execute(fieldValueMap) { wr, p ->
-            toDomain(sql().firstRow(selectStatement + toAndSeparatedKVString(wr), p as Map))
+            toDomain(sql().firstRow(selectStatement + toAndSeparatedFPString(wr), p as Map))
         } as T
     }
 
-    static String toAndSeparatedKVString(wr) {
-        toSeparatedString(wr, ' and ')
+    static String toAndSeparatedFPString(wr) {
+        toSeparatedFPString(wr, ' and ')
     }
 
     static String toCommaSeparatedKVString(wr) {
-        toSeparatedString(wr, ', ')
+        toSeparatedFPString(wr, ', ')
     }
 
-    static String toSeparatedString(wr, String separator) {
+    static String toSeparatedFPString(wr, String separator) {
         wr.collect { k, v ->
-            "$k = :$v"
+            "$k = $v"
         }.join(separator)
     }
 
     protected List<List> executeCreate(Map<String, ?> fieldValueMap) {
-        execute(fieldValueMap) { Map f2v, p ->
-            sql().executeInsert(createStatementP1 + "${f2v.keySet().join(', ')}" +
-                    createStatementP2 + "${f2v.values().collect { ":$it" }.join(', ')}" +
+        execute(fieldValueMap) { Map f2p, p ->
+            sql().executeInsert(createStatementP1 + "${f2p.keySet().join(', ')}" +
+                    createStatementP2 + "${f2p.values().join(', ')}" +
                     createStatementP3, p as Map)
 
         } as List<List>
@@ -158,8 +158,8 @@ abstract class AbstractDao<T> implements Dao<T> {
     }
 
     protected executeUpdate(Map<String, ?> fieldValueMap) {
-        execute(fieldValueMap) { Map f2v, p ->
-            sql().executeUpdate(updateStatement + toCommaSeparatedKVString(f2v))
+        execute(fieldValueMap) { Map f2p, p ->
+            sql().executeUpdate(updateStatement + toCommaSeparatedKVString(f2p), p as Map)
         }
     }
 
@@ -175,7 +175,7 @@ abstract class AbstractDao<T> implements Dao<T> {
 
     protected void executeDelete(Map<String, ?> fieldValueMap) {
         execute(fieldValueMap) { pref, wr, p ->
-            sql().execute(deleteStatement + toAndSeparatedKVString(wr), p as Map)
+            sql().execute(deleteStatement + toAndSeparatedFPString(wr), p as Map)
         }
     }
 
