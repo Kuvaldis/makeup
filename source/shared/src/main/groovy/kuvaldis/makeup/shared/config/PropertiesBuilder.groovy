@@ -1,6 +1,7 @@
 package kuvaldis.makeup.shared.config
 
 import com.google.inject.Inject
+import com.google.inject.name.Named
 import groovy.util.logging.Slf4j
 
 /**
@@ -12,7 +13,7 @@ import groovy.util.logging.Slf4j
 @com.google.inject.Singleton
 class PropertiesBuilder {
 
-    @Inject
+    @Inject @Named('config.files.list')
     private List<String> configFilesList;
 
     public PropertiesHolder build() {
