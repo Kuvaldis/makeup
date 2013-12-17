@@ -170,7 +170,7 @@ abstract class AbstractDao<T> implements Dao<T> {
             if (k == idFieldName || k == 'class') return
             fieldValueMap << [k, v]
         }
-        sql().executeUpdate(fieldValueMap)
+        executeUpdate(fieldValueMap)
     }
 
     protected void executeDelete(Map<String, ?> fieldValueMap) {
