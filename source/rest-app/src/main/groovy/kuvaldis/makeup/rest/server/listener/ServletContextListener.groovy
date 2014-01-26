@@ -5,6 +5,7 @@ import com.google.inject.Injector
 import com.google.inject.servlet.GuiceServletContextListener
 import kuvaldis.makeup.rest.module.RestModule
 import kuvaldis.makeup.rest.module.SecurityModule
+import org.apache.shiro.guice.web.ShiroWebModule
 
 import javax.servlet.ServletContext
 import javax.servlet.ServletContextEvent
@@ -26,6 +27,6 @@ class ServletContextListener extends GuiceServletContextListener {
 
     @Override
     protected Injector getInjector() {
-        Guice.createInjector(new RestModule(), new SecurityModule(servletContext))
+        Guice.createInjector(new RestModule(), ShiroWebModule.guiceFilterModule(), new SecurityModule(servletContext))
     }
 }
