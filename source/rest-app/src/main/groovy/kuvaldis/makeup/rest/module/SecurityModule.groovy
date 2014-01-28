@@ -22,16 +22,18 @@ import static com.google.inject.name.Names.named
  */
 class SecurityModule extends ShiroWebModule {
 
+    def ServletContext servletContext
+
     SecurityModule(ServletContext servletContext) {
         super(servletContext)
+        this.servletContext = servletContext
     }
 
     @Override
     protected void configureShiroWeb() {
         install(new ShiroAopModule())
 
-        bind(String).annotatedWith(named('security.url.callback')).toInstance('http://localhost:8080/callback');
-        bind(String).annotatedWith(named('security.url.failure')).toInstance('/failure');
+        bind(String).annotatedWith(named('security.failure.url')).toInstance('/failure');
 
         bindRealm().to(Realm)
 
@@ -46,15 +48,15 @@ class SecurityModule extends ShiroWebModule {
 
     @Provides
     @com.google.inject.Singleton
-    Clients clients(@Named('security.url.callback') String callbackUrl, ClientsProvider clientsProvider) {
+    Clients clients(@Named('security.oauth.callback.url') String callbackUrl, ClientsProvider clientsProvider) {
         return new Clients(callbackUrl: callbackUrl,
                 clients: clientsProvider.clients);
     }
 
     @Provides
     @com.google.inject.Singleton
-    ClientsProvider clientsProvider() {
-        new ClientsProvider(clients: [new FacebookClient(key: '145278422258960', secret: 'be21409ba8f39b5dae2a7de525484da8')])
+    ClientsProvider clientsProvider(@Named('security.oauth.facebook.key') String key, @Named('security.oauth.facebook.secret') String secret) {
+        new ClientsProvider(clients: [new FacebookClient(key: key, secret: secret)])
     }
 
 

@@ -11,7 +11,7 @@ import org.pac4j.core.client.Clients
 class ClientFilter extends io.buji.pac4j.ClientFilter {
 
     @Inject
-    ClientFilter(Clients clients, @Named('security.url.failure') String failureUrl) {
+    ClientFilter(Clients clients, @Named('security.failure.url') String failureUrl) {
         super()
         this.clients = clients
         this.failureUrl = failureUrl

@@ -1,6 +1,5 @@
 package kuvaldis.makeup.rest.server.listener
 
-import com.google.inject.Guice
 import com.google.inject.Injector
 import com.google.inject.servlet.GuiceServletContextListener
 import kuvaldis.makeup.rest.module.RestModule
@@ -27,6 +26,7 @@ class ServletContextListener extends GuiceServletContextListener {
 
     @Override
     protected Injector getInjector() {
-        Guice.createInjector(new RestModule(), ShiroWebModule.guiceFilterModule(), new SecurityModule(servletContext))
+        (servletContext.getAttribute('injector') as Injector)
+                .createChildInjector(new RestModule(), ShiroWebModule.guiceFilterModule(), new SecurityModule(servletContext))
     }
 }
