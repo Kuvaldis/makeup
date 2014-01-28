@@ -17,7 +17,8 @@ class SharedModule extends AbstractModule {
         bind(new TypeLiteral<List<String>>() {}).annotatedWith(named('config.files.list')).toInstance([
                 'conf/server.groovy',
                 'conf/db.groovy',
-                'conf/profiles.groovy'
+                'conf/profiles.groovy',
+                'conf/security.groovy'
         ])
         bind(PropertiesBuilder)
     }

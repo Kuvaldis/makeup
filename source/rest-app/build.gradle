@@ -23,6 +23,8 @@ dependencies {
 
     compile group: 'io.buji', name: 'buji-pac4j', version: '1.2.1'
     compile group: 'org.pac4j', name: 'pac4j-http', version: '1.4.1'
+    compile group: 'org.pac4j', name: 'pac4j-oauth', version: '1.4.1'
+
 
     compile group: 'commons-logging', name: 'commons-logging', version: '1.1.3'
 }

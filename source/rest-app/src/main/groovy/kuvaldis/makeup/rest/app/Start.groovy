@@ -23,7 +23,7 @@ class Start {
         def startTimeApp = System.currentTimeMillis()
         Injector sharedInjector = Guice.createInjector(new SharedModule())
         def appModule = new AppModule(propertiesHolder: sharedInjector.getInstance(PropertiesBuilder).build())
-        Injector injector = sharedInjector.createChildInjector(appModule, new LibModule())
+        Injector injector = Guice.createInjector(appModule, new LibModule())
         injector.getInstance(Key.get(Server, HttpServer)).start()
         log.info("Application started in ${System.currentTimeMillis() - startTimeApp} ms")
         println "Press any key to stop the server..."

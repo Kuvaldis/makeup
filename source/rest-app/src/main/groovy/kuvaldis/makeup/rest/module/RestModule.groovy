@@ -2,7 +2,6 @@ package kuvaldis.makeup.rest.module
 
 import com.sun.jersey.guice.JerseyServletModule
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer
-import kuvaldis.makeup.rest.resource.UserResource
 
 /**
  * User: NFadin
@@ -12,7 +11,6 @@ import kuvaldis.makeup.rest.resource.UserResource
 class RestModule extends JerseyServletModule {
     @Override
     protected void configureServlets() {
-        bind(UserResource)
-        serve("/*").with(GuiceContainer)
+        serve("/*").with(GuiceContainer, ['com.sun.jersey.config.property.packages' : 'kuvaldis.makeup.rest.resource'])
     }
 }
