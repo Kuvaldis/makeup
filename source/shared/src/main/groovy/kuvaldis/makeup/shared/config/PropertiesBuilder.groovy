@@ -1,7 +1,5 @@
 package kuvaldis.makeup.shared.config
 
-import com.google.inject.Inject
-import com.google.inject.name.Named
 import groovy.util.logging.Slf4j
 
 /**
@@ -10,13 +8,9 @@ import groovy.util.logging.Slf4j
  * Time: 16:50
  */
 @Slf4j
-@com.google.inject.Singleton
 class PropertiesBuilder {
 
-    @Inject @Named('config.files.list')
-    private List<String> configFilesList;
-
-    public PropertiesHolder build() {
+    public static PropertiesHolder build(List<String> configFilesList) {
         def env = System.getProperty("env")
         log.info('Run with profile: {}', env)
         ConfigObject resultConfig

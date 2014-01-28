@@ -1,7 +1,6 @@
 package kuvaldis.makeup.rest.server
 
 import com.google.inject.Inject
-import com.google.inject.Injector
 import com.google.inject.name.Named
 import com.google.inject.servlet.GuiceFilter
 import groovy.util.logging.Slf4j
@@ -23,11 +22,10 @@ class GrizzlyServer implements Server {
     private HttpServer server
 
     @Inject
-    GrizzlyServer(@Named('server.port') Integer port, Injector injector) {
+    GrizzlyServer(@Named('server.port') Integer port) {
         server = HttpServer.createSimpleServer(".", port)
         def context = new WebappContext('Makeup rest-app context', '')
         context.addListener(ServletContextListener)
-        context.setAttribute('injector', injector)
         context.addFilter('guiceFilter', GuiceFilter).with {
             addMappingForUrlPatterns(EnumSet.allOf(DispatcherType), '/*')
         }

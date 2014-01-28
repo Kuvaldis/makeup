@@ -1,10 +1,9 @@
 package kuvaldis.makeup.shared.module
 
 import com.google.inject.AbstractModule
-import com.google.inject.TypeLiteral
+import com.google.inject.name.Names
 import kuvaldis.makeup.shared.config.PropertiesBuilder
-
-import static com.google.inject.name.Names.named
+import kuvaldis.makeup.shared.config.PropertiesHolder
 
 /**
  * User: NFadin
@@ -14,12 +13,13 @@ import static com.google.inject.name.Names.named
 class SharedModule extends AbstractModule {
     @Override
     protected void configure() {
-        bind(new TypeLiteral<List<String>>() {}).annotatedWith(named('config.files.list')).toInstance([
+        PropertiesHolder propertiesHolder = PropertiesBuilder.build([
                 'conf/server.groovy',
                 'conf/db.groovy',
                 'conf/profiles.groovy',
                 'conf/security.groovy'
         ])
-        bind(PropertiesBuilder)
+        bind(PropertiesHolder).toInstance(propertiesHolder)
+        Names.bindProperties(binder(), propertiesHolder.toProperties())
     }
 }
