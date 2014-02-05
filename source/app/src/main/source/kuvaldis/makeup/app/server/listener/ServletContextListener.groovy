@@ -1,4 +1,4 @@
-package kuvaldis.makeup.rest.server.listener
+package kuvaldis.makeup.app.server.listener
 
 import com.google.inject.Injector
 import com.google.inject.servlet.GuiceServletContextListener

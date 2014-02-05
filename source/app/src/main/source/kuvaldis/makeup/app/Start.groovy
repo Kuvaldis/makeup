@@ -1,11 +1,11 @@
-package kuvaldis.makeup.rest.app
+package kuvaldis.makeup.app
 
 import com.google.inject.Injector
 import com.google.inject.Key
 import groovy.util.logging.Slf4j
-import kuvaldis.makeup.rest.annotation.HttpServer
-import kuvaldis.makeup.rest.module.AppModule
-import kuvaldis.makeup.rest.server.Server
+import kuvaldis.makeup.app.annotation.HttpServer
+import kuvaldis.makeup.app.module.AppModule
+import kuvaldis.makeup.app.server.Server
 import kuvaldis.makeup.shared.module.SharedGuiceHolder
 
 /**

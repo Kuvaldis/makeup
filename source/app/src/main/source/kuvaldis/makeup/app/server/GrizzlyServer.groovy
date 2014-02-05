@@ -1,10 +1,10 @@
-package kuvaldis.makeup.rest.server
+package kuvaldis.makeup.app.server
 
 import com.google.inject.Inject
 import com.google.inject.name.Named
 import com.google.inject.servlet.GuiceFilter
 import groovy.util.logging.Slf4j
-import kuvaldis.makeup.rest.server.listener.ServletContextListener
+import kuvaldis.makeup.app.server.listener.ServletContextListener
 import org.glassfish.grizzly.http.server.HttpServer
 import org.glassfish.grizzly.servlet.WebappContext
 

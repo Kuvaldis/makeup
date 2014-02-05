@@ -1,4 +1,4 @@
-package kuvaldis.makeup.rest.server
+package kuvaldis.makeup.app.server
 
 /**
  * User: NFadin

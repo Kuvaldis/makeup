@@ -1,4 +1,4 @@
-package kuvaldis.makeup.rest.server
+package kuvaldis.makeup.app.server
 
 import com.google.inject.Inject
 import com.google.inject.name.Named

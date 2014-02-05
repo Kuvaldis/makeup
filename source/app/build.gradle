@@ -1,0 +1,11 @@
+project.ext {
+    grizzlyVersion = '2.3.7'
+}
+
+dependencies {
+    compile project(':shared')
+    compile project(':lib')
+    compile project(':rest')
+
+    compile group: 'org.glassfish.grizzly', name: 'grizzly-http-servlet', version: grizzlyVersion
+}
