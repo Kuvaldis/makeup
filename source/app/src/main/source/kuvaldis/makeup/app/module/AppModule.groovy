@@ -6,9 +6,11 @@ import com.google.inject.matcher.AbstractMatcher
 import com.google.inject.spi.InjectionListener
 import com.google.inject.spi.TypeEncounter
 import com.google.inject.spi.TypeListener
+import kuvaldis.makeup.app.annotation.ApiServer
 import kuvaldis.makeup.app.annotation.DbServer
-import kuvaldis.makeup.app.annotation.HttpServer
-import kuvaldis.makeup.app.server.GrizzlyServer
+import kuvaldis.makeup.app.annotation.StaticContentServer
+import kuvaldis.makeup.app.server.GrizzlyApiServer
+import kuvaldis.makeup.app.server.GrizzlyStaticContentServer
 import kuvaldis.makeup.app.server.H2Server
 import kuvaldis.makeup.app.server.Server
 
@@ -21,7 +23,8 @@ class AppModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(Server).annotatedWith(HttpServer).to(GrizzlyServer)
+        bind(Server).annotatedWith(ApiServer).to(GrizzlyApiServer)
+        bind(Server).annotatedWith(StaticContentServer).to(GrizzlyStaticContentServer)
         bindDbServer()
     }
 

@@ -17,12 +17,12 @@ import javax.servlet.DispatcherType
  */
 @Slf4j
 @com.google.inject.Singleton
-class GrizzlyServer implements Server {
+class GrizzlyApiServer implements Server {
 
     private HttpServer server
 
     @Inject
-    GrizzlyServer(@Named('server.port') Integer port) {
+    GrizzlyApiServer(@Named('server.api.port') Integer port) {
         server = HttpServer.createSimpleServer(".", port)
         def context = new WebappContext('Makeup rest-app context', '')
         context.addListener(ServletContextListener)
@@ -34,10 +34,10 @@ class GrizzlyServer implements Server {
 
     @Override
     def start() {
-        log.info('Start http server')
+        log.info('Start api server')
         def startTime = System.currentTimeMillis()
         server.start()
-        log.info("Http server started in ${System.currentTimeMillis() - startTime} ms")
+        log.info("Api server started in ${System.currentTimeMillis() - startTime} ms")
     }
 
     @Override

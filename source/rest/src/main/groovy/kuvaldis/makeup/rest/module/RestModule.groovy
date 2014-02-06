@@ -11,6 +11,6 @@ import com.sun.jersey.guice.spi.container.servlet.GuiceContainer
 class RestModule extends JerseyServletModule {
     @Override
     protected void configureServlets() {
-        serve("/*").with(GuiceContainer, ['com.sun.jersey.config.property.packages' : 'kuvaldis.makeup.rest.resource'])
+        serve("/api/*").with(GuiceContainer, ['com.sun.jersey.config.property.packages' : 'kuvaldis.makeup.rest.resource'])
     }
 }
