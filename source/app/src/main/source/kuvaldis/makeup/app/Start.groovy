@@ -17,7 +17,7 @@ import kuvaldis.makeup.shared.module.SharedGuiceHolder
 @Slf4j
 class Start {
     public static void main(String[] args) {
-        log.info('Start rest application')
+        log.info('Start application')
         def startTimeApp = System.currentTimeMillis()
         Injector sharedInjector = SharedGuiceHolder.injector
         Injector injector = sharedInjector.createChildInjector(new AppModule())

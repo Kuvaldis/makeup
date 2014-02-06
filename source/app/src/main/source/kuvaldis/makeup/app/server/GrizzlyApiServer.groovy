@@ -24,7 +24,7 @@ class GrizzlyApiServer implements Server {
     @Inject
     GrizzlyApiServer(@Named('server.api.port') Integer port) {
         server = HttpServer.createSimpleServer(".", port)
-        def context = new WebappContext('Makeup rest-app context', '')
+        def context = new WebappContext('Makeup rest context', '')
         context.addListener(ServletContextListener)
         context.addFilter('guiceFilter', GuiceFilter).with {
             addMappingForUrlPatterns(EnumSet.allOf(DispatcherType), '/*')

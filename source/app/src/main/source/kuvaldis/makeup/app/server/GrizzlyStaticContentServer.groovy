@@ -19,6 +19,7 @@ class GrizzlyStaticContentServer implements Server {
     @Inject
     GrizzlyStaticContentServer(@Named('server.static_content.port') Integer port, @Named('server.static_content.path') String pathToStaticContent) {
         server = HttpServer.createSimpleServer(pathToStaticContent, port)
+        server.listeners.each { it.fileCache.enabled = false }
     }
 
     @Override

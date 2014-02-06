@@ -11,6 +11,10 @@ environments {
         }
     }
     kuvaldis {
-
+        server {
+            static_content {
+                path = 'g:\\Sources\\Projects\\makeup\\source\\static\\'
+            }
+        }
     }
 }
